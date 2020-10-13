@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import Layout from "../components/Layout";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-export default function SignUp() {
+import authContext from "../context/auth";
+import Alert from "../components/Alert";
+export default () => {
+  const { _signup, msg } = useContext(authContext);
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -11,9 +14,15 @@ export default function SignUp() {
     },
     validationSchema: Yup.object({
       name: Yup.string().required("El nombre es obligarotio"),
+      email: Yup.string()
+        .email("El email no es valido")
+        .required("El email es obligatorio"),
+      password: Yup.string()
+        .required("El password es obligatorio")
+        .min(6, "El password debe ser de al menos 6 caracteres"),
     }),
     onSubmit: (values) => {
-      console.log("Enviando Formulario", values);
+      _signup(values);
     },
   });
   return (
@@ -22,6 +31,7 @@ export default function SignUp() {
         <h2 className="text-4xl font-sans font-bold text-gray-800 text-center my-4">
           Crear Cuenta
         </h2>
+        {msg && <Alert msg={msg} />}
         <div className="flex justify-center mt-5">
           <div className="w-full max-w-lg">
             <form
@@ -46,8 +56,9 @@ export default function SignUp() {
                   onBlur={formik.handleBlur}
                 />
                 {formik.touched.name && formik.errors.name ? (
-                  <div className="my-2 bg-gray boder-l-4 border-red-500 text-red-700 p-4">
-                    <p className="font-bold">{formik.errors.name}</p>
+                  <div className="my-2 bg-gray-200  border-red-500 text-red-700 p-4">
+                    <p className="font-bold">Error</p>
+                    <p> {formik.errors.name}</p>
                   </div>
                 ) : null}
               </div>
@@ -69,6 +80,12 @@ export default function SignUp() {
                   onBlur={formik.handleBlur}
                 />
               </div>
+              {formik.touched.email && formik.errors.email ? (
+                <div className="my-2 bg-gray-200  border-red-500 text-red-700 p-4">
+                  <p className="font-bold">Error</p>
+                  <p> {formik.errors.email}</p>
+                </div>
+              ) : null}
               <div className="mb-4">
                 <label
                   className="block text-black text-sm font-bold mb-2"
@@ -77,7 +94,7 @@ export default function SignUp() {
                   Password
                 </label>
                 <input
-                  type="text"
+                  type="password"
                   className="shadow appearance-none corder rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="password"
                   name="password"
@@ -86,6 +103,12 @@ export default function SignUp() {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                 />
+                {formik.touched.password && formik.errors.password ? (
+                  <div className="my-2 bg-gray-200  border-red-500 text-red-700 p-4">
+                    <p className="font-bold">Error</p>
+                    <p> {formik.errors.password}</p>
+                  </div>
+                ) : null}
               </div>
               <input
                 type="submit"
@@ -98,4 +121,4 @@ export default function SignUp() {
       </div>
     </Layout>
   );
-}
+};

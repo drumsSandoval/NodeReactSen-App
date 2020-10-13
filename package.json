@@ -8,10 +8,13 @@
     "start": "next start"
   },
   "dependencies": {
+    "axios": "^0.20.0",
     "formik": "^2.1.4",
     "next": "9.4.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "react-dropzone": "^11.2.0",
+    "react-router-dom": "^5.2.0",
     "yup": "^0.29.1"
   }
 }
